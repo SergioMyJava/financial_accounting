@@ -16,7 +16,7 @@ public class Service implements ServiceInterfase{
 
     public UserBean getUser(String name,String pass){
         UserBean forCheck = data.getUser(name);
-        if(userCheck(forCheck,pass)){
+        if(userCheckPass(forCheck,pass)){
             userFromData = forCheck;
             return forCheck;
         }
@@ -24,7 +24,7 @@ public class Service implements ServiceInterfase{
             return null;
     }
 
-    public boolean userCheck(UserBean forCheck,String pass){
+    public boolean userCheckPass(UserBean forCheck,String pass){
         if(forCheck != null){
             String checkPass = forCheck.getPass();
             if(checkPass.equals(pass)){
@@ -35,5 +35,19 @@ public class Service implements ServiceInterfase{
         }
         else
             return false;
+    }
+
+    public void displayUserState(){
+        System.out.println("Current state of finance : ");
+        showArrayContents(userFromData.getIncome());
+        System.out.println();
+        showArrayContents(userFromData.getConsumption());
+    }
+
+    private void showArrayContents(String[] arr){
+        int k = 1;
+        for(int i = 0;i<arr.length;i++){
+            System.out.println( (k++) + "." + " " + arr[i]);
+        }
     }
 }

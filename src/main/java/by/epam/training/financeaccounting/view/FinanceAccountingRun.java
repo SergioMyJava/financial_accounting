@@ -24,6 +24,7 @@ public class FinanceAccountingRun {
 
         if (contr.signIn(name, pass)) {
             System.out.println("User found");
+            contr.displayUserState();
         } else
             System.out.println("User not found!");
     }

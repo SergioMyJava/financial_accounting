@@ -41,8 +41,5 @@ public class UserBean implements Serializable {
         return name;
     }
 
-    public String getPass() {
-        return pass;
-    }
-
+    public String getPass() {return pass;}
 }

@@ -17,4 +17,8 @@ public class Controller implements ControllerInterface{
         else
         return false;
     }
+
+    public void displayUserState() {
+        serv.displayUserState();
+    }
 }
