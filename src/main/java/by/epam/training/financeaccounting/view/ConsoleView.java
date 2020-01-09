@@ -72,7 +72,6 @@ public class ConsoleView implements View {
             System.out.println("Registration completed successfully.");
         } else {
             System.out.println("For some reason, something went wrong try again or contact support..");
-            registration();
         }
     }
 

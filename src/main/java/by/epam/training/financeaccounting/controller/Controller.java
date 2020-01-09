@@ -7,22 +7,21 @@ import by.epam.training.financeaccounting.view.View;
 
 public class Controller {
     ServiceInterfase serv;
-    DaoInterface dao;
+    View view;
 
     public void run(View view, ServiceInterfase service, DaoInterface dao) {
         this.serv = service;
         serv.setData(dao);
-        this.dao = dao;
-
+        this.view = view;
         boolean end = false;
-        while (!end){
-            checkRegistration(view,this);
+        while (!end) {
+            checkRegistration(this,dao);
+            // тут не доделан метод еще, будет добавлена работа с UserBean
             end = true;
         }
     }
 
-    public void checkRegistration(View view,Controller controller){
-
+    public void checkRegistration(Controller controller,DaoInterface dao) {
         if (view.entry(controller)) {
             displayUserState(view);
 
@@ -46,7 +45,7 @@ public class Controller {
         view.displayUser(user.getConsumption());
     }
 
-    public boolean registerNewUser(String name,String password){
-        return serv.addNewUser(name,password);
+    public boolean registerNewUser(String name, String password) {
+        return serv.addNewUser(name, password);
     }
 }
