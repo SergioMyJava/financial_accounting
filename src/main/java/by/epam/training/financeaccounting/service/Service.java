@@ -1,53 +1,62 @@
 package by.epam.training.financeaccounting.service;
 
-
-import by.epam.training.financeaccounting.dao.Dao;
 import by.epam.training.financeaccounting.dao.DaoInterface;
 import by.epam.training.financeaccounting.dao.UserBean;
 
 
-public class Service implements ServiceInterfase{
+public class Service implements ServiceInterfase {
     DaoInterface data;
-    UserBean userFromData;
+    UserBean userService;
 
-    public Service(){
-      data = new Dao();
+    public void setData(DaoInterface data){
+            this.data = data;
+
     }
 
-    public UserBean getUser(String name,String pass){
+    public void setUserService(UserBean userService){
+        this.userService = userService;
+    }
+
+    public UserBean getUserFromData(String name, String pass) {
         UserBean forCheck = data.getUser(name);
-        if(userCheckPass(forCheck,pass)){
-            userFromData = forCheck;
+        if (userCheckPass(forCheck, pass)) {
+            setUserService(forCheck);
             return forCheck;
-        }
-        else
+        } else {
             return null;
+        }
     }
 
-    public boolean userCheckPass(UserBean forCheck,String pass){
-        if(forCheck != null){
+    private boolean userCheckPass(UserBean forCheck, String pass) {
+        if (forCheck != null) {
             String checkPass = forCheck.getPass();
-            if(checkPass.equals(pass)){
+            if (checkPass.equals(pass)) {
                 return true;
-            }
-            else
+            } else {
                 return false;
-        }
-        else
+            }
+        } else {
             return false;
-    }
-
-    public void displayUserState(){
-        System.out.println("Current state of finance : ");
-        showArrayContents(userFromData.getIncome());
-        System.out.println();
-        showArrayContents(userFromData.getConsumption());
-    }
-
-    private void showArrayContents(String[] arr){
-        int k = 1;
-        for(int i = 0;i<arr.length;i++){
-            System.out.println( (k++) + "." + " " + arr[i]);
         }
+    }
+
+    public UserBean getUser(){
+        return userService;
+    }
+
+    public boolean addNewUser(String name,String password){
+        UserBean newUser = new UserBean(name,password);
+        newUser = defaultIncomeConsumption(newUser);
+        data.addUser( newUser.getName(),newUser);
+        return userCheckPass(newUser,newUser.getPass());
+    }
+
+    private UserBean defaultIncomeConsumption(UserBean newUser){
+        UserBean defaultUser = newUser;
+        String[] defaultIncome = {"зарплата:0"};
+        String[] defaultConsumption = {"еда:0","одежда:0","квартплата:0"};
+        defaultUser.setIncome(defaultIncome);
+        defaultUser.setConsumption(defaultConsumption);
+        return defaultUser;
     }
 }

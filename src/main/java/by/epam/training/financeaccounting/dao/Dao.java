@@ -4,30 +4,39 @@ import java.io.*;
 import java.util.HashMap;
 
 public class Dao implements DaoInterface {
-    private HashMap<String, UserBean> users;
+    private HashMap<String, UserBean> usersMap;
 
     public Dao() {
-        users = new HashMap<String, UserBean>();
+        usersMap = new HashMap<String, UserBean>();
         readFromData();
     }
 
-    public void setUsers(HashMap<String, UserBean> users) {
-        this.users = users;
+    public HashMap<String, UserBean> getUsersMap() {
+        return usersMap;
+    }
+
+    public void setUsersMap(HashMap<String, UserBean> usersMap) {
+        this.usersMap = usersMap;
+    }
+
+    public void addUser( String name,UserBean user) {
+        usersMap.put(name,user);
     }
 
     public UserBean getUser(String name) {
-        UserBean forReturn = users.get(name);
+        UserBean forReturn = usersMap.get(name);
         if (forReturn != null) {
             return forReturn;
-        } else
+        } else {
             return null;
+        }
     }
 
     public boolean wrightToData() {
         try {
             FileOutputStream fos = new FileOutputStream("financedata.txt");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(users);
+            oos.writeObject(usersMap);
             oos.close();
             fos.close();
             return true;
@@ -39,11 +48,17 @@ public class Dao implements DaoInterface {
 
     public void readFromData() {
         try {
-            FileInputStream fis = new FileInputStream("financedata.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            users = (HashMap<String, UserBean>) ois.readObject();
-            fis.close();
-            ois.close();
+            File checkForNull = new File("financedata.txt");
+            if(checkForNull.length() != 0) {
+                FileInputStream fis = new FileInputStream("financedata.txt");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                usersMap = (HashMap<String, UserBean>) ois.readObject();
+                fis.close();
+                ois.close();
+            }
+            else{
+
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

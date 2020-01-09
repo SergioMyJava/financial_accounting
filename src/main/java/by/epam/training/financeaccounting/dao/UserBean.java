@@ -8,7 +8,7 @@ public class UserBean implements Serializable {
     String[] income;
     String[] consumption;
 
-    UserBean(String name, String pass) {
+    public UserBean(String name, String pass) {
         this.name = name;
         this.pass = pass;
     }
