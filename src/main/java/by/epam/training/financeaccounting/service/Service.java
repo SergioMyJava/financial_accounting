@@ -8,12 +8,16 @@ public class Service implements ServiceInterfase {
     DaoInterface data;
     UserBean userService;
 
-    public void setData(DaoInterface data){
-            this.data = data;
+    public void setData(DaoInterface data) {
+        this.data = data;
 
     }
 
-    public void setUserService(UserBean userService){
+    public UserBean getUser() {
+        return userService;
+    }
+
+    public void setUserService(UserBean userService) {
         this.userService = userService;
     }
 
@@ -40,23 +44,38 @@ public class Service implements ServiceInterfase {
         }
     }
 
-    public UserBean getUser(){
-        return userService;
-    }
-
-    public boolean addNewUser(String name,String password){
-        UserBean newUser = new UserBean(name,password);
+    public boolean addNewUser(String name, String password) {
+        UserBean newUser = new UserBean(name, password);
         newUser = defaultIncomeConsumption(newUser);
-        data.addUser( newUser.getName(),newUser);
-        return userCheckPass(newUser,newUser.getPass());
+        data.addUser(newUser.getName(), newUser);
+        return userCheckPass(newUser, newUser.getPass());
     }
 
-    private UserBean defaultIncomeConsumption(UserBean newUser){
+    private UserBean defaultIncomeConsumption(UserBean newUser) {
         UserBean defaultUser = newUser;
         String[] defaultIncome = {"зарплата:0"};
-        String[] defaultConsumption = {"еда:0","одежда:0","квартплата:0"};
+        String[] defaultConsumption = {"еда:0", "одежда:0", "квартплата:0"};
         defaultUser.setIncome(defaultIncome);
         defaultUser.setConsumption(defaultConsumption);
         return defaultUser;
+    }
+
+    public String[] addChangeToIncomeOrConsumption(int addAmount, int category, String[] arrForChange) {
+        String[] incomeArrForChange = arrForChange;
+        String categoryForChange = incomeArrForChange[category - 1];
+        addAmount += getCategoryValue(categoryForChange);
+        incomeArrForChange[category - 1] = replaceOldValueWithNew(categoryForChange, addAmount);
+        return incomeArrForChange;
+    }
+
+    public int getCategoryValue(String categoryForChange) {
+        int index = categoryForChange.indexOf(':');
+        int value = Integer.parseInt(categoryForChange.substring(index + 1));
+        return value;
+    }
+
+    public String replaceOldValueWithNew(String categoryForChange, int newValue) {
+        String changed = categoryForChange.substring(0, categoryForChange.indexOf(':') + 1);
+        return changed + newValue;
     }
 }

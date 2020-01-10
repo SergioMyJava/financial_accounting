@@ -8,4 +8,5 @@ public interface ServiceInterfase {
     UserBean getUser();
     boolean addNewUser(String name,String password);
     void setData(DaoInterface data);
+    String[] addChangeToIncomeOrConsumption(int addAmount, int category,String[] arrForChange);
 }

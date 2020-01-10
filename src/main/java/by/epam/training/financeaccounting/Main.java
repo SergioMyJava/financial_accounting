@@ -13,7 +13,8 @@ public class Main {
         View v = new ConsoleView();
         ServiceInterfase service = new Service();
         DaoInterface dao = new Dao();
+        service.setData(dao);
         Controller controller = new Controller();
-        controller.run(v,service,dao);
+        controller.run(v,service);
     }
 }

@@ -9,11 +9,11 @@ public class ConsoleView implements View {
     Controller control = null;
 
     public boolean entry(Controller controller) {
-        if(control == null){
+        if (control == null) {
             this.control = controller;
         }
         scan = new Scanner(System.in);
-        System.out.println("Do you have an account, or do you want to have one? 1. I have account. 2. I want to register an account.");
+        System.out.println("Do you have an account, or do you want to have one? 1. I have account. 2. I want to register an account. 3. Escape .");
         String answer = scan.nextLine();
         if ("1".equals(answer)) {
             return checkNamePassword();
@@ -21,6 +21,10 @@ public class ConsoleView implements View {
         } else if ("2".equals(answer)) {
             registration();
             return entry(controller);
+
+        } else if ("3".equals(answer)) {
+            System.out.println("Good bye!");
+            scan.close();
         } else {
             System.out.println("You entered an invalid number.Try it again.");
             entry(controller);
@@ -75,4 +79,64 @@ public class ConsoleView implements View {
         }
     }
 
+    public int changeIncomeOrConsumption() {
+        System.out.println("Do you want to change: 1. Income . 2. Consumption . 3. Escape .");
+        int chois = scan.nextInt();
+
+        switch (chois) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                scan.close();
+                break;
+        }
+        return 0;
+    }
+
+    public int whatChangesMake() {
+        System.out.println("Want to add a new position or change an existing one? 1. Change existing. 2. Add a new position.");
+        int userChoice = checkEnteredNumber();
+        return userChoice;
+    }
+
+    public int selectCategory() {
+        System.out.println("Choose in which category you want to make changes.");
+        return checkEnteredNumber();
+    }
+
+    public int enterChange() {
+        System.out.println("Enter amount.The entered amount will be added to the existing.");
+        return checkEnteredNumber();
+    }
+
+    public String addCategory() {
+        System.out.println("Enter new name of category.The new category should not contain ':' .");
+        String newCategoryName = scan.nextLine();
+        if (newCategoryName.contains(":")) {
+            System.out.println("You disobeyed recommendations.");
+            addCategory();
+        }
+
+        System.out.println("Enter a value for the category.Value is greater than zero.");
+        int newAmound = checkEnteredNumber();
+        if (newAmound < 0) {
+            System.out.println("Value must be a greater than zero.");
+            addCategory();
+        }
+
+        return newCategoryName + ":" + newAmound;
+    }
+
+    public int checkEnteredNumber() {
+        int amount;
+        if (scan.hasNextInt()) {
+            amount = scan.nextInt();
+        } else {
+            System.out.println("Entered not a number.");
+            return -1;
+        }
+        return amount;
+    }
 }
