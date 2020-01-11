@@ -75,13 +75,23 @@ public class Controller {
 
         if (userChoice == 2) {
             String newCategory = view.addCategory();
-
+            String[] oldIncome = forChange.getIncome();
+            String[] newIncome = new String[oldIncome.length + 1];
+            for(int i = 0;i < oldIncome.length;i++){
+                newIncome[i] = oldIncome[i];
+            }
+            newIncome[newIncome.length-1] = newCategory;
+            forChange.setIncome(newIncome);
+            view.displayUser(forChange.getIncome());
+            //System.out.println("New category name : " + newCategory );
         }
         if (userChoice == -1) {
             workWithIncome();
         }
 
     }
+
+
 
     public void workWithConsumption() {
     }

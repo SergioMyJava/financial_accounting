@@ -113,7 +113,7 @@ public class ConsoleView implements View {
 
     public String addCategory() {
         System.out.println("Enter new name of category.The new category should not contain ':' .");
-        String newCategoryName = scan.nextLine();
+        String newCategoryName = scan.next();
         if (newCategoryName.contains(":")) {
             System.out.println("You disobeyed recommendations.");
             addCategory();
