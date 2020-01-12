@@ -25,6 +25,7 @@ public class ConsoleView implements View {
         } else if ("3".equals(answer)) {
             System.out.println("Good bye!");
             scan.close();
+            return false;
         } else {
             System.out.println("You entered an invalid number.Try it again.");
             entry(controller);
@@ -90,7 +91,7 @@ public class ConsoleView implements View {
                 return 2;
             case 3:
                 scan.close();
-                break;
+                return 3;
         }
         return 0;
     }
@@ -112,8 +113,12 @@ public class ConsoleView implements View {
     }
 
     public String addCategory() {
-        System.out.println("Enter new name of category.The new category should not contain ':' .");
-        String newCategoryName = scan.next();
+        scan = new Scanner(System.in);                                                          // если не создаютут новый Scaner то проскакивает и не читает newCategoryName , прото проскакивает на 126 строку
+        System.out.println("Enter new name of category.The new category should not contain ':'.");
+        String newCategoryName ="";
+        if(scan.hasNext()) {
+            newCategoryName = scan.nextLine();
+        }
         if (newCategoryName.contains(":")) {
             System.out.println("You disobeyed recommendations.");
             addCategory();

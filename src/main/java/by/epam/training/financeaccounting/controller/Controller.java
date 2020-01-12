@@ -9,10 +9,15 @@ public class Controller {
     ServiceInterfase service;
     View view;
 
+    public void setEnd() {
+        this.end = true;
+    }
+
+    boolean end = false;
+
     public void run(View view, ServiceInterfase service) {
         this.service = service;
         this.view = view;
-        boolean end = false;
         checkRegistration(this);
         while (!end) {
             int choisNumber = view.changeIncomeOrConsumption();
@@ -21,10 +26,10 @@ public class Controller {
             }
             if (choisNumber == 2) {
                 workWithConsumption();
-                run(view, service);
             }
-
-            System.out.println("Exit");
+            if(choisNumber == 3){
+                setEnd();
+            }
 
         }
     }
@@ -34,7 +39,7 @@ public class Controller {
             displayUserState(view);
 
         } else {
-            run(view, service);
+            setEnd();
         }
     }
 
@@ -58,42 +63,60 @@ public class Controller {
     }
 
     public void workWithIncome() {
+        makeChanges(1);
+
+    }
+
+    public void workWithConsumption() {
+        makeChanges(2);
+    }
+
+    private void makeChanges(int flag){
         UserBean forChange = service.getUser();
         int userChoice = view.whatChangesMake();
+        String[] arrForChange = null;
+        if(flag == 1){
+            arrForChange = forChange.getIncome();
+        }
+
+        if(flag == 2){
+            arrForChange = forChange.getConsumption();
+        }
 
         if (userChoice == 1) {
-            view.displayUser(forChange.getIncome());
+            view.displayUser(arrForChange);
             int category = view.selectCategory();
-            if(category <= forChange.getIncome().length && category > 0) {
+            if(category <= arrForChange.length && category > 0) {
                 int addAmount = view.enterChange();
-                String[] oldIncome = forChange.getIncome();
-                String[] newIncom = service.addChangeToIncomeOrConsumption(addAmount,category, oldIncome);
-                forChange.setIncome(newIncom);
-                view.displayUser(forChange.getIncome());
+                String[] oldArr = arrForChange;
+                String[] newArr = service.addChangeToIncomeOrConsumption(addAmount,category, oldArr);
+                saveChange(flag,newArr,forChange);
             }
         }
 
         if (userChoice == 2) {
             String newCategory = view.addCategory();
-            String[] oldIncome = forChange.getIncome();
-            String[] newIncome = new String[oldIncome.length + 1];
-            for(int i = 0;i < oldIncome.length;i++){
-                newIncome[i] = oldIncome[i];
+            String[] oldArr = arrForChange;
+            String[] newArr = new String[oldArr.length + 1];
+            for(int i = 0;i < oldArr.length;i++){
+                newArr[i] = oldArr[i];
             }
-            newIncome[newIncome.length-1] = newCategory;
-            forChange.setIncome(newIncome);
-            view.displayUser(forChange.getIncome());
-            //System.out.println("New category name : " + newCategory );
+            newArr[newArr.length-1] = newCategory;
+            saveChange(flag,newArr,forChange);
         }
         if (userChoice == -1) {
             workWithIncome();
         }
-
     }
 
-
-
-    public void workWithConsumption() {
+    private void saveChange(int flag,String[] newArr,UserBean forChange){
+        if(flag == 1){
+            forChange.setIncome(newArr);
+            view.displayUser(forChange.getIncome());
+        }
+        if(flag == 2){
+            forChange.setConsumption(newArr);
+            view.displayUser(forChange.getConsumption());
+        }
     }
-
 }

@@ -1,19 +1,15 @@
 package by.epam.training.financeaccounting.dao;
 
 import by.epam.training.financeaccounting.controller.Controller;
+import by.epam.training.financeaccounting.view.ConsoleView;
 
 import java.util.HashMap;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
-        Controller r = new Controller();
-      int[] e = new int[12];
-      e[1] = 1;
-      e[2] = 43;
-        e[3] = 43;
-        System.out.println(e.length);
-
+        ConsoleView y = new ConsoleView();
+        System.out.println(y.addCategory());
 
 //        UserBean t1 = new UserBean("vasa","123");
 //        String[] incomt1 = {"зарплата:1300","сдача квартиры:400","сдача гаража:60"};
