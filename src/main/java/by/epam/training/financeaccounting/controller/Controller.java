@@ -83,19 +83,15 @@ public class Controller {
         }
 
         if (userChoice == 1) {
-            //boolean end = false;
-            //while (!end) {
                 view.displayUser(arrForChange);
                 int category = view.selectCategory();
                 if (checkCategory(category,arrForChange)) {
                     int addAmount = view.enterChange();
                     String[] newArr = service.addChangeToIncomeOrConsumption(addAmount, category, arrForChange);
-                   // end = true;
                     saveChange(flag, newArr, forChange);
                 } else {
                     view.tryAgain();
                 }
-            //}
         }
 
         if (userChoice == 2) {
