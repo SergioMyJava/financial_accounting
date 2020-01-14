@@ -61,11 +61,11 @@ public class Service implements ServiceInterfase {
     }
 
     public String[] addChangeToIncomeOrConsumption(int addAmount, int category, String[] arrForChange) {
-        String[] incomeArrForChange = arrForChange;
-        String categoryForChange = incomeArrForChange[category - 1];
+        String[] arrChange = arrForChange;
+        String categoryForChange = arrChange[category - 1];
         addAmount += getCategoryValue(categoryForChange);
-        incomeArrForChange[category - 1] = replaceOldValueWithNew(categoryForChange, addAmount);
-        return incomeArrForChange;
+        arrChange[category - 1] = replaceOldValueWithNew(categoryForChange, addAmount);
+        return arrChange;
     }
 
     public int getCategoryValue(String categoryForChange) {
@@ -77,5 +77,9 @@ public class Service implements ServiceInterfase {
     public String replaceOldValueWithNew(String categoryForChange, int newValue) {
         String changed = categoryForChange.substring(0, categoryForChange.indexOf(':') + 1);
         return changed + newValue;
+    }
+
+    public void saveToData(){
+        data.wrightToData();
     }
 }

@@ -8,9 +8,6 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) {
 
-        ConsoleView y = new ConsoleView();
-        System.out.println(y.addCategory());
-
 //        UserBean t1 = new UserBean("vasa","123");
 //        String[] incomt1 = {"зарплата:1300","сдача квартиры:400","сдача гаража:60"};
 //        String[] consumptiont1 = {"еда:500","одежда:200","машина:300","непредвиденные расходы:150"};

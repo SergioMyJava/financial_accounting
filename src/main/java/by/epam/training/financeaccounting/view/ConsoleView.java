@@ -48,7 +48,7 @@ public class ConsoleView implements View {
             System.out.println("Current state of finance : ");
             return true;
         } else {
-            userNotFound();
+            tryAgain();
             return false;
         }
     }
@@ -60,8 +60,8 @@ public class ConsoleView implements View {
         }
     }
 
-    public void userNotFound() {
-        System.out.println("User not found!Try it again.");
+    public void tryAgain() {
+        System.out.println("Try it again.Something went wrong, check the entered data wrong.");
     }
 
     public void registration() {
@@ -97,7 +97,8 @@ public class ConsoleView implements View {
     }
 
     public int whatChangesMake() {
-        System.out.println("Want to add a new position or change an existing one? 1. Change existing. 2. Add a new position.");
+        System.out.println("Want to add a new position, change an existing one? 1. Change existing. " +
+                "2. Add a new position. 3. Delete position .");
         int userChoice = checkEnteredNumber();
         return userChoice;
     }
@@ -113,7 +114,7 @@ public class ConsoleView implements View {
     }
 
     public String addCategory() {
-        scan = new Scanner(System.in);                                                          // если не создаютут новый Scaner то проскакивает и не читает newCategoryName , прото проскакивает на 126 строку
+        scan = new Scanner(System.in);
         System.out.println("Enter new name of category.The new category should not contain ':'.");
         String newCategoryName ="";
         if(scan.hasNext()) {
@@ -135,13 +136,13 @@ public class ConsoleView implements View {
     }
 
     public int checkEnteredNumber() {
-        int amount;
+        int enteredNumber;
         if (scan.hasNextInt()) {
-            amount = scan.nextInt();
+            enteredNumber = scan.nextInt();
         } else {
             System.out.println("Entered not a number.");
             return -1;
         }
-        return amount;
+        return enteredNumber;
     }
 }

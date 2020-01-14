@@ -6,17 +6,17 @@ import java.util.HashMap;
 public class Dao implements DaoInterface {
     private HashMap<String, UserBean> usersMap;
 
-    public Dao() {
-        usersMap = new HashMap<String, UserBean>();
-        readFromData();
+    public void setUsersMap(HashMap<String, UserBean> usersMap) {
+        this.usersMap = usersMap;
     }
 
     public HashMap<String, UserBean> getUsersMap() {
         return usersMap;
     }
 
-    public void setUsersMap(HashMap<String, UserBean> usersMap) {
-        this.usersMap = usersMap;
+    public Dao() {
+        usersMap = new HashMap<String, UserBean>();
+        readFromData();
     }
 
     public void addUser( String name,UserBean user) {
@@ -57,7 +57,7 @@ public class Dao implements DaoInterface {
                 ois.close();
             }
             else{
-
+                System.out.println("File empty nothing to read.");
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
