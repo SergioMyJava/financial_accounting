@@ -5,8 +5,8 @@ import by.epam.training.financeaccounting.controller.Controller;
 import java.util.Scanner;
 
 public class ConsoleView implements View {
-    Scanner scan;
-    Controller control = null;
+    private Scanner scan;
+    private Controller control = null;
 
     public boolean entry(Controller controller) {
         if (control == null) {
@@ -14,37 +14,31 @@ public class ConsoleView implements View {
         }
         scan = new Scanner(System.in);
         System.out.println("Do you have an account, or do you want to have one? 1. I have account. 2. I want to register an account. 3. Escape .");
-        String answer = scan.nextLine();
-        if ("1".equals(answer)) {
-            return checkNamePassword();
-
-        } else if ("2".equals(answer)) {
-            registration();
-            return entry(controller);
-
-        } else if ("3".equals(answer)) {
-            System.out.println("Good bye!");
-            scan.close();
-            return false;
-        } else {
-            System.out.println("You entered an invalid number.Try it again.");
-            entry(controller);
+        int answer = checkEnteredNumber();
+        switch (answer) {
+            case 1:
+                return checkNamePassword();
+            case 2:
+                registration();
+                return entry(controller);
+            case 3:
+                System.out.println("Good bye!");
+                scan.close();
+                return false;
+            case -1:
+                entry(controller);
         }
         return false;
     }
 
     private boolean checkNamePassword() {
         String name;
-        String pass;
+        String password;
+        scan = new Scanner(System.in);
+        name = enteredName();
+        password = enteredPass();
 
-        System.out.println("Enter name.");
-        name = scan.nextLine();
-
-        System.out.println("Enter password.");
-        pass = scan.nextLine();
-
-        if (control.signIn(name, pass)) {
-            System.out.println("User found!");
+        if (control.signIn(name, password)) {
             System.out.println("Current state of finance : ");
             return true;
         } else {
@@ -53,7 +47,7 @@ public class ConsoleView implements View {
         }
     }
 
-    public void displayUser(String[] arr) {
+    public void displayIncomeConsumption(String[] arr) {
         int k = 1;
         for (int i = 0; i < arr.length; i++) {
             System.out.println((k++) + "." + " " + arr[i]);
@@ -64,14 +58,12 @@ public class ConsoleView implements View {
         System.out.println("Try it again.Something went wrong, check the entered data wrong.");
     }
 
-    public void registration() {
+    private void registration() {
         String name;
         String password;
-        System.out.println("Enter your name.");
-        name = scan.nextLine();
-
-        System.out.println("Enter your password.");
-        password = scan.nextLine();
+        scan = new Scanner(System.in);
+        name = enteredName();
+        password = enteredPass();
 
         if (control.registerNewUser(name, password)) {
             System.out.println("Registration completed successfully.");
@@ -99,8 +91,7 @@ public class ConsoleView implements View {
     public int whatChangesMake() {
         System.out.println("Want to add a new position, change an existing one? 1. Change existing. " +
                 "2. Add a new position. 3. Delete position .");
-        int userChoice = checkEnteredNumber();
-        return userChoice;
+        return checkEnteredNumber();
     }
 
     public int selectCategory() {
@@ -116,8 +107,8 @@ public class ConsoleView implements View {
     public String addCategory() {
         scan = new Scanner(System.in);
         System.out.println("Enter new name of category.The new category should not contain ':'.");
-        String newCategoryName ="";
-        if(scan.hasNext()) {
+        String newCategoryName = "";
+        if (scan.hasNext()) {
             newCategoryName = scan.nextLine();
         }
         if (newCategoryName.contains(":")) {
@@ -135,14 +126,51 @@ public class ConsoleView implements View {
         return newCategoryName + ":" + newAmound;
     }
 
-    public int checkEnteredNumber() {
+    private int checkEnteredNumber() {
         int enteredNumber;
         if (scan.hasNextInt()) {
             enteredNumber = scan.nextInt();
         } else {
-            System.out.println("Entered not a number.");
+            System.out.println("You entered an invalid number.Try it again.");
             return -1;
         }
         return enteredNumber;
+    }
+
+    public int specialEntrance() {
+        System.out.println("Log out all users or block user. 1. Log out. 2. Block user. 3. Escape.");
+        int number = checkEnteredNumber();
+        switch (number) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return -1;
+        }
+        return -1;
+    }
+
+    public void displayToString(String string){
+        System.out.println(string);
+    }
+
+    public String blackList(){
+        scan = new Scanner(System.in);
+        return enteredName();
+    }
+
+    private String enteredName(){
+        System.out.println("Enter name.");
+        return scan.nextLine();
+    }
+
+    private String enteredPass(){
+        System.out.println("Enter password.");
+        return scan.nextLine();
+    }
+
+    public void dataIsAmpty(){
+        System.out.println("File empty nothing to read.");
     }
 }

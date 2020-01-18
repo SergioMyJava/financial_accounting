@@ -10,4 +10,7 @@ public interface ServiceInterfase {
     void setData(DaoInterface data);
     String[] addChangeToIncomeOrConsumption(int addAmount, int category,String[] arrForChange);
     void saveToData();
+    UserBean[] getingAllUsers();
+    void deleteUser(String name);
+    boolean checkFillingDataInService();
 }

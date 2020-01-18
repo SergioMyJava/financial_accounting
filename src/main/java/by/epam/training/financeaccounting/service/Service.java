@@ -3,10 +3,12 @@ package by.epam.training.financeaccounting.service;
 import by.epam.training.financeaccounting.dao.DaoInterface;
 import by.epam.training.financeaccounting.dao.UserBean;
 
+import java.util.Collection;
+
 
 public class Service implements ServiceInterfase {
-    DaoInterface data;
-    UserBean userService;
+    private DaoInterface data;
+    private UserBean userService;
 
     public void setData(DaoInterface data) {
         this.data = data;
@@ -17,7 +19,7 @@ public class Service implements ServiceInterfase {
         return userService;
     }
 
-    public void setUserService(UserBean userService) {
+    private void setUserService(UserBean userService) {
         this.userService = userService;
     }
 
@@ -32,16 +34,11 @@ public class Service implements ServiceInterfase {
     }
 
     private boolean userCheckPass(UserBean forCheck, String pass) {
+        String checkPass = "";
         if (forCheck != null) {
-            String checkPass = forCheck.getPass();
-            if (checkPass.equals(pass)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
+            checkPass = forCheck.getPass();
         }
+        return checkPass.equals(pass);
     }
 
     public boolean addNewUser(String name, String password) {
@@ -68,18 +65,46 @@ public class Service implements ServiceInterfase {
         return arrChange;
     }
 
-    public int getCategoryValue(String categoryForChange) {
+    private int getCategoryValue(String categoryForChange) {
         int index = categoryForChange.indexOf(':');
-        int value = Integer.parseInt(categoryForChange.substring(index + 1));
-        return value;
+        return Integer.parseInt(categoryForChange.substring(index + 1));
     }
 
-    public String replaceOldValueWithNew(String categoryForChange, int newValue) {
+    private String replaceOldValueWithNew(String categoryForChange, int newValue) {
         String changed = categoryForChange.substring(0, categoryForChange.indexOf(':') + 1);
         return changed + newValue;
     }
 
-    public void saveToData(){
+    public void saveToData() {
         data.wrightToData();
+    }
+
+    public UserBean[] getingAllUsers() {
+        return getUsers();
+    }
+
+    private UserBean[] getUsers() {
+        Collection userFromMap = data.getUsersMap().values();
+        UserBean[] usersForReturn = new UserBean[userFromMap.size()];
+        int i = 0;
+        for (Object a : userFromMap) {
+            UserBean us = (UserBean) a;
+            usersForReturn[i] = us;
+            ++i;
+        }
+        return usersForReturn;
+    }
+
+    public void deleteUser(String name) {
+        deleteUserByName(name);
+    }
+
+    private void deleteUserByName(String name) {
+        data.delete(name);
+    }
+
+    public boolean checkFillingDataInService() {
+        return data.checkFillingDataInDao();
+
     }
 }

@@ -1,5 +1,7 @@
-package by.epam.training.financeaccounting.dao;
+package by.epam.training.financeaccounting;
 
+import by.epam.training.financeaccounting.dao.Dao;
+import by.epam.training.financeaccounting.dao.UserBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestDao {
 
     Dao testDao = new Dao();
-    HashMap<String,UserBean> createdInTest = new HashMap();
+    HashMap<String, UserBean> createdInTest = new HashMap();
 
     @BeforeEach
     public void fillTxt() {

@@ -5,19 +5,23 @@ import by.epam.training.financeaccounting.dao.UserBean;
 import by.epam.training.financeaccounting.service.ServiceInterfase;
 import by.epam.training.financeaccounting.view.View;
 
-public class Controller {
-    ServiceInterfase service;
-    View view;
-    boolean end = false;
+import java.util.LinkedList;
+import java.util.List;
 
-    public void setEnd() {
+public class Controller {
+    private List internalResources;
+    private ServiceInterfase service;
+    private View view;
+    private boolean end = false;
+
+    private void setEnd() {
         this.end = true;
     }
 
     public void run(View view, ServiceInterfase service) {
         this.service = service;
         this.view = view;
-        checkRegistration(this);
+        entryController(this);
         while (!end) {
             int choisNumber = view.changeIncomeOrConsumption();
             if (choisNumber == 1) {
@@ -34,16 +38,22 @@ public class Controller {
         }
     }
 
-    public void checkRegistration(Controller controller) {
+    private void entryController(Controller controller) {
         if (view.entry(controller)) {
             displayUserState(view);
-
         } else {
             run(view, service);
         }
     }
 
     public boolean signIn(String name, String pass) {
+        administrationCheck(name, pass);
+        checkFillingData();
+
+        if (checkBlackList(name)) {
+            return false;
+        }
+
         if (service.getUserFromData(name, pass) != null) {
             return true;
         } else {
@@ -53,27 +63,27 @@ public class Controller {
 
     private void displayUserState(View view) {
         UserBean user = service.getUser();
-        view.displayUser(user.getIncome());
+        view.displayIncomeConsumption(user.getIncome());
         System.out.println();
-        view.displayUser(user.getConsumption());
+        view.displayIncomeConsumption(user.getConsumption());
     }
 
     public boolean registerNewUser(String name, String password) {
         return service.addNewUser(name, password);
     }
 
-    public void workWithIncome() {
+    private void workWithIncome() {
         makeChanges(1);
     }
 
-    public void workWithConsumption() {
+    private void workWithConsumption() {
         makeChanges(2);
     }
 
     private void makeChanges(int flag) {
         UserBean forChange = service.getUser();
         int userChoice = view.whatChangesMake();
-        String[] arrForChange = null;
+        String[] arrForChange = new String[]{};
         if (flag == 1) {
             arrForChange = forChange.getIncome();
         }
@@ -83,33 +93,32 @@ public class Controller {
         }
 
         if (userChoice == 1) {
-                view.displayUser(arrForChange);
-                int category = view.selectCategory();
-                if (checkCategory(category,arrForChange)) {
-                    int addAmount = view.enterChange();
-                    String[] newArr = service.addChangeToIncomeOrConsumption(addAmount, category, arrForChange);
-                    saveChange(flag, newArr, forChange);
-                } else {
-                    view.tryAgain();
-                }
+            view.displayIncomeConsumption(arrForChange);
+            int category = view.selectCategory();
+            if (checkCategory(category, arrForChange)) {
+                int addAmount = view.enterChange();
+                String[] newArr = service.addChangeToIncomeOrConsumption(addAmount, category, arrForChange);
+                saveChange(flag, newArr, forChange);
+            } else {
+                view.tryAgain();
+            }
         }
 
         if (userChoice == 2) {
             String newCategory = view.addCategory();
-            String[] oldArr = arrForChange;
-            String[] newArr = new String[oldArr.length + 1];
-            for (int i = 0; i < oldArr.length; i++) {
-                newArr[i] = oldArr[i];
+            String[] newArr = new String[arrForChange.length + 1];
+            for (int i = 0; i < arrForChange.length; i++) {
+                newArr[i] = arrForChange[i];
             }
             newArr[newArr.length - 1] = newCategory;
             saveChange(flag, newArr, forChange);
         }
         if (userChoice == 3) {
-            view.displayUser(arrForChange);
+            view.displayIncomeConsumption(arrForChange);
             int category = view.selectCategory();
-            if(checkCategory(category,arrForChange)){
-                arrForChange = deleteCategory(arrForChange,category);
-                saveChange(flag,arrForChange,forChange);
+            if (checkCategory(category, arrForChange)) {
+                arrForChange = deleteCategory(arrForChange, category);
+                saveChange(flag, arrForChange, forChange);
             }
         }
         if (userChoice == -1) {
@@ -120,11 +129,11 @@ public class Controller {
     private void saveChange(int flag, String[] newArr, UserBean forChange) {
         if (flag == 1) {
             forChange.setIncome(newArr);
-            view.displayUser(forChange.getIncome());
+            view.displayIncomeConsumption(forChange.getIncome());
         }
         if (flag == 2) {
             forChange.setConsumption(newArr);
-            view.displayUser(forChange.getConsumption());
+            view.displayIncomeConsumption(forChange.getConsumption());
         }
     }
 
@@ -138,10 +147,9 @@ public class Controller {
             return forReturn;
         } else {
             for (int i = 0; i < arr.length - 1; i++) {
-                if(i >= category-1){
-                    forReturn[i] = arr[i+1];
-                }
-                else {
+                if (i >= category - 1) {
+                    forReturn[i] = arr[i + 1];
+                } else {
                     forReturn[i] = arr[i];
                 }
             }
@@ -150,10 +158,64 @@ public class Controller {
     }
 
     private boolean checkCategory(int category, String[] arrForCheck) {
-        if (category <= arrForCheck.length && category > 0) {
-            return true;
-        } else {
-            return false;
+        return (category <= arrForCheck.length && category > 0);
+    }
+
+    private void administrationCheck(String name, String pass) {
+        if (name.equals("admin") && pass.equals("1111")) {
+            special();
+        }
+    }
+
+    private void special() {
+        boolean end = false;
+        while (!end) {
+            int adminChoice = view.specialEntrance();
+            switch (adminChoice) {
+                case 1:
+                    displayAllUser();
+                    break;
+                case 2:
+                    blackList();
+                    break;
+                case -1:
+                    end = true;
+            }
+        }
+    }
+
+    private void displayAllUser() {
+        UserBean[] users = service.getingAllUsers();
+        for (int i = 0; i < users.length; i++) {
+            view.displayToString(users[i].toString());
+        }
+    }
+
+    private void blackList() {
+        String name = view.blackList();
+        if (internalResources == null) {
+            internalResources = new LinkedList();
+        }
+        internalResources.add(name);
+        service.deleteUser(name);
+    }
+
+    private boolean checkBlackList(String name) {
+        if (internalResources != null) {
+            for (Object a : internalResources) {
+                if (a.equals(name)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void checkFillingData() {
+        if (!service.checkFillingDataInService()) {
+            view.dataIsAmpty();
+            run(view, service);
         }
     }
 }

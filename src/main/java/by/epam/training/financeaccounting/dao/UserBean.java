@@ -30,14 +30,6 @@ public class UserBean implements Serializable {
         return consumption;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
     public String getName() {
         return name;
     }
@@ -64,7 +56,7 @@ public class UserBean implements Serializable {
 
     @Override
     public String toString(){
-        return "Name = " + name + " Pass " + pass + " Income " + Arrays.asList(income) +
+        return "Name = " + name + " Pass = " + pass + " Income " + Arrays.asList(income) +
                 " Consumption " + Arrays.asList(consumption);
     }
 }

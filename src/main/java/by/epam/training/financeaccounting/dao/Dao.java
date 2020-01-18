@@ -1,7 +1,7 @@
 package by.epam.training.financeaccounting.dao;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.*;
 
 public class Dao implements DaoInterface {
     private HashMap<String, UserBean> usersMap;
@@ -19,8 +19,8 @@ public class Dao implements DaoInterface {
         readFromData();
     }
 
-    public void addUser( String name,UserBean user) {
-        usersMap.put(name,user);
+    public void addUser(String name, UserBean user) {
+        usersMap.put(name, user);
     }
 
     public UserBean getUser(String name) {
@@ -49,20 +49,32 @@ public class Dao implements DaoInterface {
     public void readFromData() {
         try {
             File checkForNull = new File("financedata.txt");
-            if(checkForNull.length() != 0) {
+            if (checkForNull.length() != 0) {
                 FileInputStream fis = new FileInputStream("financedata.txt");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 usersMap = (HashMap<String, UserBean>) ois.readObject();
                 fis.close();
                 ois.close();
-            }
-            else{
+            } else {
                 System.out.println("File empty nothing to read.");
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void delete(String name) {
+        usersMap.remove(name);
+    }
+
+    public boolean checkFillingDataInDao() {
+        int size = usersMap.size();
+        if (size == 0) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
